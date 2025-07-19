@@ -7,11 +7,8 @@ public class ConsoleProgress implements Runnable {
 
     public static void main(String[] args) throws InterruptedException {
         progress.start();
-        /* System.out.println("Имя нити = " + Thread.currentThread().getName()); */
-        Thread.sleep(5000); /* симулируем выполнение параллельной задачи в течение 5 секунд. */
-        /* System.out.println("Нить прервана ? - " + progress.isInterrupted()); */
+        Thread.sleep(5000);
         progress.interrupt();
-        System.out.println("Нить прервана ? - " + progress.isInterrupted());
 
     }
 
@@ -19,18 +16,15 @@ public class ConsoleProgress implements Runnable {
     public void run() {
         var process = new char[] {'-', '\\', '|', '/'};
         int index = 0;
-        System.out.println("Нить прервана (внутри метода RUN) ? - " + progress.isInterrupted());
-        while (!progress.isInterrupted()) {
+        while (!Thread.currentThread().isInterrupted()) {
             if (index == process.length) {
                 index = 0;
             }
-            /* System.out.println(progress.getName()); */
             System.out.print("\r load: " + process[index++]);
-            /* System.out.println(progress.isInterrupted()); */
             try {
-                progress.sleep(500);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }
