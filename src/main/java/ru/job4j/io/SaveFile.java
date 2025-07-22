@@ -13,7 +13,7 @@ public class SaveFile {
     }
 
     public void saveContent(String content) throws IOException {
-        try (BufferedWriter o = new BufferedWriter(new FileWriter(file))){
+        try (BufferedWriter o = new BufferedWriter(new FileWriter(file))) {
             for (int i = 0; i < content.length(); i++) {
                 o.write(content.charAt(i));
             }
