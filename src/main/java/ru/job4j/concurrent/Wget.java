@@ -6,7 +6,11 @@ public class Wget {
                 () -> {
                     try {
                         System.out.println("Start loading ... ");
-                        Thread.sleep(3000);
+                        for (int index = 0; index < 101; index++) {
+                            Thread.sleep(1000);
+                            System.out.print("\rLoading : " + index  + "%");
+                        }
+                        System.out.println("");
                         System.out.println("Loaded.");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -14,6 +18,5 @@ public class Wget {
                 }
         );
         thread.start();
-        System.out.println("Main");
     }
 }
