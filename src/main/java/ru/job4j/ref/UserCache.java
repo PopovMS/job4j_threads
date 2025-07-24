@@ -18,11 +18,7 @@ public class UserCache {
     }
 
     public List<User> findAll() {
-        List<User> copyUsers = new ArrayList<>();
-        users.values()
-                .stream()
-                .peek(vol -> copyUsers.add(User.of(vol.getName())));
 
-        return copyUsers;
+        return new ArrayList<>(users.values());
     }
 }
