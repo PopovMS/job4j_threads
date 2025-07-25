@@ -4,7 +4,6 @@ public class ConsoleProgress implements Runnable {
 
     public static Thread progress = new Thread(new ConsoleProgress());
 
-
     public static void main(String[] args) throws InterruptedException {
         progress.start();
         Thread.sleep(5000);
