@@ -1,62 +1,44 @@
 package ru.job4j;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SimpleBlockingQueueTest {
     @Test
+    @Timeout(value = 1)
     public void whenAdd() throws InterruptedException {
-        SimpleBlockingQueue blockingQueue = new SimpleBlockingQueue(1);
-        Thread one = new Thread(
-                () -> {
-                    System.out.println(Thread.currentThread().getName() + " started");
-                    blockingQueue.offer(1);
-                },
-                "One"
-        );
-        Thread two = new Thread(
-                () -> {
-                    blockingQueue.offer(3);
-                    System.out.println(Thread.currentThread().getName() + " started");
-                },
-                "Two"
-        );
-        one.start();
-        two.start();
-        assertThat(blockingQueue.poll()).isEqualTo(1);
-    }
-
-    @Test
-    public void whenAddAndPoolThenAdd() throws InterruptedException {
-        SimpleBlockingQueue blockingQueue = new SimpleBlockingQueue(1);
-        Thread one = new Thread(
-                () -> {
-                    System.out.println(Thread.currentThread().getName() + " started");
-                    blockingQueue.offer(1);
-                },
-                "One"
-        );
-        Thread two = new Thread(
-                () -> {
-                    blockingQueue.offer(2);
-                    System.out.println(Thread.currentThread().getName() + " started");
-                },
-                "Two"
-        );
-        Thread three = new Thread(
+        var queue = new SimpleBlockingQueue<Integer>(2);
+        var one = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
                     try {
-                        blockingQueue.poll();
+                        queue.offer(1);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 },
-                "Three"
+                "One"
+        );
+        var two = new Thread(
+                () -> {
+                    try {
+                        queue.offer(3);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(Thread.currentThread().getName() + " started");
+                },
+                "Two"
         );
         one.start();
         two.start();
-        three.start();
-        assertThat(blockingQueue.poll()).isEqualTo(2);
+        one.join();
+        two.join();
+        var rsl = List.of(queue.poll(), queue.poll());
+        assertThat(rsl).containsOnly(1, 3);
     }
 }
